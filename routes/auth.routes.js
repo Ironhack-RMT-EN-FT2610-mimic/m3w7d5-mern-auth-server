@@ -1,6 +1,9 @@
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 
 const router = require("express").Router();
+
+const { verifyToken } = require("../middlewares/auth.middlewares")
 
 const User = require("../models/User.model")
 
@@ -73,12 +76,24 @@ router.post("/login", async(req, res) => {
   }
 
   // We have finished the authentication of the user. The user IS who they claim to be.
-  
+  const payload = {
+    _id: foundUser._id,
+    email: foundUser.email,
+    role: foundUser.role,
+  }
 
-  res.send("all good in login")
+  const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+    expiresIn: "7d"
+  })
+
+  res.status(200).json({ authToken, payload })
+
 })
 
 // GET "/api/auth/verify" => receiving and validating the Auth Token and sending the user info to the frontend.
+router.get('/verify', verifyToken, (req, res) => {
+  res.status(200).json(req.payload);
+});
 
 
 module.exports = router;
