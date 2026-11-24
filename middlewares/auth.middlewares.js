@@ -4,6 +4,7 @@ function verifyToken(req, res, next) {
 
   try {
     
+    console.log(req.headers.authorization)
     const authToken = req.headers.authorization.split(" ")[1]
 
     const payload = jwt.verify(authToken, process.env.TOKEN_SECRET)

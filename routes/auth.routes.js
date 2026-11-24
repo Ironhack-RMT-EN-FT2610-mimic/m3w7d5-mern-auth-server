@@ -10,6 +10,12 @@ const User = require("../models/User.model")
 // POST "/api/auth/signup" => receive the user credentials and create the user document.
 router.post("/signup", async(req, res) => {
   console.log(req.body)
+
+  if (!req.body) {
+    res.status(400).json({message: "Body not received"})
+    return
+  }
+
   const { email, password, username } = req.body
   //* Backend validations
 
@@ -53,6 +59,12 @@ router.post("/signup", async(req, res) => {
 // POST "/api/auth/login" => receive the user credentials to authenticate the user. Also create and send the Auth Token.
 router.post("/login", async(req, res) => {
   console.log(req.body)
+
+  if (!req.body) {
+    res.status(400).json({message: "Body not received"})
+    return
+  }
+
   const { email, password } = req.body
 
   // the email and password should be provided
